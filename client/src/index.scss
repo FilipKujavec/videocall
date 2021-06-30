@@ -8,18 +8,6 @@ $medium: 1200px;
 @import url('https://fonts.googleapis.com/css2?family=Armata&display=swap');
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-//Mixins
-
-@mixin streamButton {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-
-    span:hover {
-        transform: scale(110%);
-    }
-}
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -161,13 +149,19 @@ video {
 } 
 
 .button-fullscreen {
-    @include streamButton();
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
     top: 1rem;
     right: 1rem;
     position: absolute;
 
     span {
         font-size: 2rem;
+    }
+    
+    span:hover {
+        transform: scale(110%);
     }
 }
 
