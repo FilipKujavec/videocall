@@ -16,8 +16,8 @@ interface Props {
     isInitialized: boolean,
     hasCallEnded: boolean,
     isAvailable: boolean,
-    joinRoom: Function, 
-    openCamera: Function, 
+    joinRoom: (...args: string[]) => void, 
+    openCamera: () => void, 
     match: {
         params: {
             id: string
@@ -25,14 +25,14 @@ interface Props {
     },
     localStream: MediaStream, 
     remoteStream: MediaStream, 
-    hangUp: Function, 
+    hangUp: () => void, 
 }
 
 export const Call = (props: Props) => {
     const { isInitialized, joinRoom, openCamera, match, localStream, remoteStream, isAvailable, hangUp, hasCallEnded } = props;
     const localStreamRef = useRef<HTMLVideoElement>(null);
     const remoteStreamRef = useRef<HTMLVideoElement>(null);
-    const [isFullscreen, SetIsFullscreen] = useState(false);
+    const isFullscreen = document.fullscreenElement !== null;
     const history = useHistory();
 
     const callId = match.params.id
@@ -46,7 +46,6 @@ export const Call = (props: Props) => {
             if (isFullscreen === true) {
                 await document.exitFullscreen();
             }
-            SetIsFullscreen(isFullscreen === true ? false:true);
         }
     }
 
@@ -57,18 +56,18 @@ export const Call = (props: Props) => {
                 //Add it to <video />
                 localStreamRef.current.srcObject = localStream;
             }
-            // If there is no call going on connect to the room
+            // If there is no connection, establish one to the callId
             if (isInitialized === false) {
                 joinRoom(callId);
             }
         }
 
-        //If localStream does not exist open the camera
+        //If localStream is null, camera isn't started so open
         if (localStream === null) {
             openCamera();
         }
         // eslint-disable-next-line
-    }, [localStream])
+    }, [localStream]);
 
     useEffect(() => {
         //If remoteStream exist
@@ -77,24 +76,24 @@ export const Call = (props: Props) => {
             remoteStreamRef.current.srcObject = remoteStream;
         }
          // eslint-disable-next-line
-    }, [isAvailable])
+    }, [isAvailable]);
 
     useEffect(() => {
-        //hangUp() when the component gets closed
+        //If the component closes, close peerConnection and reset the store to remove old values
         return () => {
             hangUp();
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
-        //If the call disconnects hangUp() and go to '/'
+        //If the call disconnects, reset the store to remove old values
         if (hasCallEnded === true) {
             hangUp();
             history.push('/');
         }
-    }, [hasCallEnded])
+    }, [hasCallEnded]);
 
-    const fullscreenButton = isFullscreen === true ? 'fullscreen_exit':'fullscreen';
+    const fullscreenButtonIcon = isFullscreen === true ? 'fullscreen_exit':'fullscreen';
 
     return (
         <div id='fullscreen' className='stream-container' >
@@ -102,7 +101,7 @@ export const Call = (props: Props) => {
             <video className='localVideo' ref={localStreamRef} autoPlay muted />
 
             <button className='button-fullscreen' onClick={() => toggleFullScreen()} >
-                <span className='fullscreen-icon material-icons'> {fullscreenButton} </span>
+                <span className='fullscreen-icon material-icons'> {fullscreenButtonIcon} </span>
             </button>
 
             <MenuButtons />

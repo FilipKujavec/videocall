@@ -58,7 +58,11 @@ export const addLocalTracks = () => async (dispatch: Function, getState: Functio
     }
 }
 
-export const createRoom = (history: any) => async (dispatch: Function, getState: Function, { getFirebase, getFirestore }:{ getFirebase: Function, getFirestore:Function }) => { 
+interface History {
+    push: (...args: string[]) => void;
+}
+
+export const createRoom = (history: History) => async (dispatch: Function, getState: Function, { getFirebase, getFirestore }:{ getFirebase: Function, getFirestore:Function }) => { 
     const firestore = getFirestore();  
     const roomRef = firestore.collection('rooms').doc();
     const localStream = getState().localStream.stream;
@@ -138,7 +142,7 @@ export const createRoom = (history: any) => async (dispatch: Function, getState:
 
     dispatch({ type: ADD_SNAPSHOT, payload: snapshotUnsubsribe})
 
-    //Call hangUp() function in case of failure
+    //Call hangUp() function in case of failure to reset values
     peerConnection.oniceconnectionstatechange = function(event: any) {
         if (peerConnection.iceConnectionState === "failed" ||
             peerConnection.iceConnectionState === "disconnected" ||
@@ -156,11 +160,11 @@ export const joinRoom = (id: string) => async (dispatch: Function, getState: Fun
     const roomSnapshot = await roomRef.get();
     console.log(id)
 
-    if (!roomSnapshot.exists) return dispatch({ type: JOIN_ROOM_ERROR, payload: 'This room does not exist!' })
+    if (!roomSnapshot.exists) return dispatch({ type: JOIN_ROOM_ERROR, payload: 'This room does not exist!' });
 
-    dispatch({ type: INITIALIZE_PEER_CONNECTION })
+    dispatch({ type: INITIALIZE_PEER_CONNECTION });
 
-    const peerConnection = getState().peerConnection.peerConnection
+    const peerConnection = getState().peerConnection.peerConnection;
 
     //Add local tracks to peerConnection
     localStream.getTracks().forEach((track: any) => {
@@ -212,7 +216,7 @@ export const joinRoom = (id: string) => async (dispatch: Function, getState: Fun
 
     dispatch({ type: ADD_SNAPSHOT, payload: snapshotUnsubsribe})
 
-    //Call hangUp() function in case of failure
+    //Call hangUp() function in case of failure to reset values
     peerConnection.oniceconnectionstatechange = function(event: any) {
         if (peerConnection.iceConnectionState === "failed" ||
             peerConnection.iceConnectionState === "disconnected" ||

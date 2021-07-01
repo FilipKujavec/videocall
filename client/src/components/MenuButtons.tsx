@@ -9,19 +9,19 @@ interface Props {
     isMuted: boolean,
     isVideoOff: boolean,
     isDeafened: boolean,
-    hangUp: Function,
-    toggleMute: Function,
-    toggleVideo: Function,
-    toggleDeafen: Function   
+    hangUp: () => void,
+    toggleMute: () => void,
+    toggleVideo: () => void,
+    toggleDeafen: () => void   
 }
 
 export const MenuButtons = (props: Props) => {
     const { hangUp, toggleMute, isMuted, toggleVideo, isVideoOff, toggleDeafen, isDeafened } = props;
     const history = useHistory();
   
-    const renderMicButton = isMuted === true ? 'mic_off':'mic';
-    const renderVideoButton = isVideoOff === true ? 'videocam_off':'videocam';
-    const renderDeafenButton = isDeafened === true ? 'headset_off':'headset';
+    const micButtonIcon = isMuted === true ? 'mic_off':'mic';
+    const videoButtonIcon = isVideoOff === true ? 'videocam_off':'videocam';
+    const deafenButtonIcon = isDeafened === true ? 'headset_off':'headset';
 
     const hangUpButton = () => {
         hangUp();
@@ -42,19 +42,19 @@ export const MenuButtons = (props: Props) => {
     return (
         <div className='menu-container' >
             <button className='button-menu' onClick={() => toggleMuteButton()} >
-                <span className='fullscreen-icon material-icons'> {renderMicButton} </span>
+                <span className='fullscreen-icon material-icons'> {micButtonIcon} </span>
             </button>
             <button className='button-menu' onClick={() => toggleDeafenButton()} >
-                <span className='fullscreen-icon material-icons'> {renderDeafenButton} </span>
+                <span className='fullscreen-icon material-icons'> {videoButtonIcon} </span>
             </button>
             <button className='button-menu' onClick={() => toggleVideoButton()} >
-                <span className='fullscreen-icon material-icons'> {renderVideoButton} </span>
+                <span className='fullscreen-icon material-icons'> {deafenButtonIcon} </span>
             </button>
             <button className='button-menu' onClick={() => hangUpButton()} >
                 <span className='fullscreen-icon material-icons'> call_end </span>
             </button>
         </div>
-    )
+    );
 }
 
 const mapStateToProps = (state: any) => ({
@@ -68,7 +68,7 @@ const mapStateToProps = (state: any) => ({
     isVideoOff: state.localStream.isVideoOff,
     hasCallEnded: state.peerConnection.hasCallEnded,
     isDeafened: state.remoteStream.isDeafened,
-})
+});
 
 const mapDispatchToProps = {
     hangUp,
@@ -77,4 +77,4 @@ const mapDispatchToProps = {
     toggleDeafen
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MenuButtons)
+export default connect(mapStateToProps, mapDispatchToProps)(MenuButtons);

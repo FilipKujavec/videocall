@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 //@ts-expect-error
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
-import { createRoom, joinRoom } from '../actions';
+import { createRoom } from '../actions';
 
-export const Home = (props: any) => {
+interface History {
+    push: (...args: string[]) => void,
+}
+
+interface Props {
+    createRoom: (...args: History[]) => void
+}
+
+export const Home = (props: Props) => {
+    const { createRoom } = props
     const [inputState, setInputState] = useState('');
     const history = useHistory();
 
     const onClick = () => {
-        props.createRoom(history);
+        createRoom(history);
     }
     
     const onSubmit = async (e: any) => {
@@ -21,7 +30,7 @@ export const Home = (props: any) => {
     return (
         <>
         <form onSubmit={(e) => onSubmit(e)}>
-        <input placeholder='Enter the Chat ID:' value={inputState} onChange={(e) => setInputState(e.target.value)} />
+        <input placeholder='Enter the Call ID:' value={inputState} onChange={(e) => setInputState(e.target.value)} />
         <button className='button' > Join Call </button>
           </form>
 
@@ -36,17 +45,12 @@ export const Home = (props: any) => {
     );
 }
 
-interface State {
-
-}
-
-const mapStateToProps = (state: State) => ({
+const mapStateToProps = (state: any) => ({
 
 });
 
 const mapDispatchToProps = {
     createRoom,
-    joinRoom
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
