@@ -30,17 +30,17 @@ export const Home = (props: Props) => {
     return (
         <>
         <form onSubmit={(e) => onSubmit(e)}>
-        <input placeholder='Enter the Call ID:' value={inputState} onChange={(e) => setInputState(e.target.value)} />
-        <button className='button' > Join Call </button>
-          </form>
+            <input className='home input' placeholder='Enter the Call ID:' value={inputState} onChange={(e) => setInputState(e.target.value)} />
+            <button className='home button' > Join Call </button>
+        </form>
 
-          <div className='split'>
-              <hr className='left'/>
-              <p>or</p>
-              <hr className='right'/>
-          </div>
+        <div className='split'>
+            <hr className='left'/>
+            <p>or</p>
+            <hr className='right'/>
+        </div>
 
-          <button className='button' onClick={() => onClick()}> Create Call </button>
+        <button className='home button' onClick={() => onClick()}> Create Call </button>
         </>
     );
 }

@@ -7,42 +7,41 @@ import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Home from './Home';
 import Call from './Call';
 
-export const App = (props: any) => {
-  const { localStream, remoteStream } = props
-  const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const [inputState, setInputState] = useState('');
+interface Props {
+  localStream: MediaStream,
+  openCamera: () => void,
+}
+
+export const App = (props: Props) => {
+  const { localStream, openCamera } = props
 
 
   useEffect(() => {
     if (localStream === null) {
-      props.openCamera();
+      openCamera();
     }
   }, [localStream])
 
   return (
-    <>
-      <Router>
-        <header>
-          <Link to='/'> <h1>VideoCall</h1> </Link>
-        </header>
+    <Router>
+      <header>
+        <Link to='/'> <h1 className='header' >VideoCall</h1> </Link>
+      </header>
 
-        <div className='container'>
-          <div className='wrapper' >
-            <Switch>
-              <Route path='/:id' component={Call} />
-              <Route path='/' component={Home} />
-            </Switch>
-          </div>
+      <div className='container'>
+        <div className='wrapper' >
+          <Switch>
+            <Route path='/:id' component={Call} />
+            <Route path='/' component={Home} />
+          </Switch>
         </div>
-      </Router>
-    </>
+      </div>
+    </Router>
   );
 }
 
 const mapStateToProps = (state: any) => ({
   localStream: state.localStream.stream,
-  remoteStream: state.remoteStream
 });
 
 const mapDispatchToProps = {

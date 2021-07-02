@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { joinRoom, openCamera, addLocalTracks, hangUp } from '../actions'
 import MenuButtons from './MenuButtons';
+import CopyCallIdButton from './CopyCallIdButton';
 
 declare global {
     interface Window {
@@ -93,19 +94,23 @@ export const Call = (props: Props) => {
         }
     }, [hasCallEnded]);
 
-    const fullscreenButtonIcon = isFullscreen === true ? 'fullscreen_exit':'fullscreen';
+    const fullscreenButtonIconClass = isFullscreen === true ? 'fullscreen_exit':'fullscreen';
 
     return (
+        <>
+        <CopyCallIdButton callId={callId} />
+
         <div id='fullscreen' className='stream-container' >
-            <video className='remoteVideo' ref={remoteStreamRef} autoPlay />
-            <video className='localVideo' ref={localStreamRef} autoPlay muted />
+            <video className='video remote' ref={remoteStreamRef} autoPlay />
+            <video className='video local' ref={localStreamRef} autoPlay muted />
 
             <button className='button-fullscreen' onClick={() => toggleFullScreen()} >
-                <span className='fullscreen-icon material-icons'> {fullscreenButtonIcon} </span>
+                <span className='fullscreen-icon material-icons'> {fullscreenButtonIconClass} </span>
             </button>
 
             <MenuButtons />
         </div>
+        </>
     );
 }
 
