@@ -41,7 +41,7 @@ header {
         font-size: 2.3rem;
         letter-spacing: 0.2rem;
         color: $secondary-color;
-        //Makes text non-selectable
+        //Makes text unselectable
         -webkit-user-select: none; /* Safari */
         -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* IE10+/Edge */
@@ -129,6 +129,11 @@ input:hover {
 
 input:focus {
     outline: none;
+}
+
+.error.message {
+    text-align: center;
+    margin-top: 1rem;
 }
 
 //Stream Menu
@@ -231,6 +236,7 @@ div.stream-container {
 
 //Clipboard
 .clipboard.wrapper {
+    position: relative;
     display: flex;
     width: 100%;
     margin-bottom: 1rem;
@@ -240,6 +246,7 @@ div.stream-container {
     border-width: 0.2rem;
     height: 3.5rem;
 }
+
 .clipboard.button {
     height: 100%;
     width: 3.5rem;
@@ -255,4 +262,40 @@ div.stream-container {
     border:none;
     padding-left: .8rem;
     background-color: $secondary-color;
+}
+
+.popup-wrapper{
+    position: relative;
+    border: solid;
+    background-color: $secondary-color;
+    z-index: 10;
+    cursor: default;
+}
+
+.clipboard.popup {
+    position: absolute;
+    left: .9rem;
+    top: -3rem;
+    z-index: 10;
+
+    p {
+        padding: 1rem;
+        background-color: $secondary-color;
+    }
+}
+
+.clipboard.popup:after {
+    $size: 1rem;
+    content: '';
+    width: $size;
+    height: $size;
+    background-color: $primary-color;
+    transform: rotate(45deg);
+    border: solid;
+    border-top: none;
+    border-left: none;
+    position: absolute;
+    z-index: 1;
+    bottom: -.55rem;
+    left: 0.2rem;
 }

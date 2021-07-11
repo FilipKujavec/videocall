@@ -3,28 +3,45 @@ import { connect } from 'react-redux';
 //@ts-expect-error
 import { useHistory } from 'react-router-dom'
 
-import { createRoom } from '../actions';
+import { createRoom, openCamera } from '../actions';
 
 interface History {
     push: (...args: string[]) => void,
 }
 
 interface Props {
-    createRoom: (...args: History[]) => void
+    createRoom: (...args: History[]) => void,
+    openCamera: () => void,
+    localStream: MediaStream,
 }
 
 export const Home = (props: Props) => {
-    const { createRoom } = props
+    const { createRoom, openCamera, localStream } = props
     const [inputState, setInputState] = useState('');
+    const [hasCreateButtonBeenClicked, setHasCreateButtonBeenClicked] = useState(false);
     const history = useHistory();
 
     const onClick = () => {
+        setHasCreateButtonBeenClicked(true)
+        if (!localStream) return null
         createRoom(history);
     }
     
     const onSubmit = async (e: any) => {
         e.preventDefault();
         history.push(`${inputState}`);
+    }
+
+    const renderError = () => {
+        if (localStream) return null
+        if (!hasCreateButtonBeenClicked) return null
+        
+        return (
+            <div >
+                <p className='error message' >You have open your camera first!</p>
+                <button className='home button' onClick={() => openCamera()} >Open Camera</button>
+            </div>
+        )
     }
 
     return (
@@ -41,16 +58,18 @@ export const Home = (props: Props) => {
         </div>
 
         <button className='home button' onClick={() => onClick()}> Create Call </button>
+        {renderError()}
         </>
     );
 }
 
 const mapStateToProps = (state: any) => ({
-
+    localStream: state.localStream.stream,
 });
 
 const mapDispatchToProps = {
     createRoom,
+    openCamera
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
